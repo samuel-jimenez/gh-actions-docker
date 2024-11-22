@@ -28,7 +28,8 @@ jobs:
         uses: actions/cache@v3
         with:
             path: |
-              /var/lib/docker/
+              /home/runner/.local/share/containers
+            key: no
 
       - name: Build with buildah
         run: |
@@ -42,12 +43,14 @@ jobs:
 
       - run: podman images
 
-      - run: docker images
-
-      - run: podman image inspect poddy
 
       - name: Run podman
         run: podman run --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z poddy
+
+      - name: Run podman
+        run: |
+          podman run \
+            --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z poddy
 
       - name: Run podman
         run: podman run \
@@ -55,3 +58,5 @@ jobs:
 
 
 
+      - name: done
+        run: echo "done"
