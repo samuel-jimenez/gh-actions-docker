@@ -3,7 +3,7 @@
 name: CI
 
 env:
-  IMAGE_NAME: poddy
+  IMAGE_NAME: doquer
 
 
 # Controls when the workflow will run
@@ -32,25 +32,18 @@ jobs:
         uses: actions/cache@v3
         with:
             path: |
-              /home/runner/.local/share/containers
-            key: no
+              /var/lib/docker/
+            key: docker
 
-      - name: Build with buildah
+      - name: Build with docker
+        run: docker build -t "$IMAGE_NAME" .github/workflows
+
+      - run: docker images
+
+
+      - name: Run docker
         run: |
-          ctr=$(buildah from "archlinux")
-          buildah config \
-            --cmd /usr/bin/ls $ctr
-          buildah run "$ctr" -- pacman \
-            --noconfirm -Syu
-          buildah commit -- "$ctr" "$IMAGE_NAME"
-          buildah rm "$ctr"
-
-      - run: podman images
-
-
-      - name: Run podman
-        run: |
-          podman run \
+          docker run \
             --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z "$IMAGE_NAME"
 
 
