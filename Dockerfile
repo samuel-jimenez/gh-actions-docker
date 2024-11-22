@@ -1,2 +1,2 @@
 FROM archlinux
-RUN pacman -Syu libplasma --noconfirm
+RUN pacman -Syu  --noconfirm
