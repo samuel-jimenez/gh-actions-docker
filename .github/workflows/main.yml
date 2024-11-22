@@ -39,7 +39,7 @@ jobs:
           docker run \
             --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/ \
             "$IMAGE_NAME"
-            /usr/bin/ls /root/
+            /usr/bin/ls -lasZ
 
 
 
