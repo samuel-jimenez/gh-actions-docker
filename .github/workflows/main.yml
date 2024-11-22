@@ -24,6 +24,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
+      - name: Cache packages
+        uses: actions/cache@v3
+        with:
+            path: |
+              /var/lib/docker/
 
       - name: build docker
         run: docker build -t doquer .
@@ -32,7 +37,6 @@ jobs:
 
       - run: docker images
 
-      - run: ls /var/lib/docker/
 
       - name: Run podman
         run: podman run --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z
