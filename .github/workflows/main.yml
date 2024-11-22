@@ -38,15 +38,16 @@ jobs:
       - run: docker images
 
 
+      - name: Run docker
+        run: docker run doquer
+
       - name: Run podman
-        run: podman run --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z
+        run: podman run --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z doquer
 
       - name: Run podman
         run: podman run \
-          --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z
+          --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z doquer
 
-      - name: Run docker
-        run: docker run
 
 
       - name: Run a multi-line script
