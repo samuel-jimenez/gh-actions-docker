@@ -2,6 +2,10 @@
 
 name: CI
 
+env:
+  IMAGE_NAME: poddy
+
+
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
@@ -38,23 +42,16 @@ jobs:
             --cmd /usr/bin/ls $ctr
           buildah run "$ctr" -- pacman \
             --noconfirm -Syu
-          buildah commit -- "$ctr" "poddy"
+          buildah commit -- "$ctr" "$IMAGE_NAME"
           buildah rm "$ctr"
 
       - run: podman images
 
 
       - name: Run podman
-        run: podman run --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z poddy
-
-      - name: Run podman
         run: |
           podman run \
-            --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z poddy
-
-      - name: Run podman
-        run: podman run \
-          --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z poddy
+            --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z "$IMAGE_NAME"
 
 
 
