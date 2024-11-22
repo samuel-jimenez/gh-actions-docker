@@ -28,17 +28,10 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      - name: Cache packages
-        uses: actions/cache@v3
-        with:
-            path: |
-              /var/lib/docker/
-            key: docker
 
       - name: Build with docker
         run: docker build -t "$IMAGE_NAME" .github/workflows
 
-      - run: docker images
 
 
       - name: Run docker
@@ -46,8 +39,7 @@ jobs:
           docker run \
             --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/ \
             "$IMAGE_NAME"
+            /usr/bin/ls /root/
 
 
 
-      - name: done
-        run: echo "done"
