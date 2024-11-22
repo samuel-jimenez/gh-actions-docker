@@ -30,33 +30,30 @@ jobs:
             path: |
               /var/lib/docker/
 
-      - name: build docker
-        run: docker build -t doquer .
+      - name: Build with buildah
+        run: |
+          ctr=$(buildah from "archlinux")
+          buildah config \
+            --cmd /usr/bin/ls $ctr
+          buildah run "$ctr" -- pacman \
+            --noconfirm -Syu
+          buildah commit -- "$ctr" "poddy"
+          buildah rm "$ctr"
 
       - run: podman images
 
       - run: docker images
 
-
-      - name: Run docker
-        run: docker run doquer
+      - run: podman image inspect poddy
 
       - name: Run podman
-        run: podman run --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z doquer
+        run: podman run --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z poddy
 
       - name: Run podman
         run: podman run \
-          --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z doquer
+          --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z poddy
 
 
 
       - name: Run a multi-line script
-        run: |
-          archctr=$(buildah from "archlinux")
-          buildah run "$archctr" -- pacman \
-          --noconfirm -Sy \
-          systemd distcc gcc
-          buildah run "$archctr" -- pacman \
-          --noconfirm -Sy \
-          systemd distcc gcc
 
