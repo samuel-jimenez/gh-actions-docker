@@ -39,8 +39,8 @@ jobs:
       - run: docker images
 
       - name: Run podman
-        run: podman run \
-        --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z
+        run: podman run \ 
+          --mount type=bind,src=${GITHUB_WORKSPACE},dst=/root/,Z
 
 
       - name: Run docker
